@@ -31,6 +31,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         echo "Error al enviar el correo. Inténtalo más tarde.";
     }
+header("Location: https://www.google.com");
+    exit();
 } else {
     // Si no es método POST, denegar acceso
     header("HTTP/1.1 403 Forbidden");
